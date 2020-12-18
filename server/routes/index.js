@@ -1,18 +1,15 @@
 var express = require("express");
 var router = express.Router();
-const passport = require('passport');
-
+const bcrypt = require('bcrypt');
 const User = require('../model/user');
 
+const saltRounds = 10;
 router.get('/',function(req,res){
-    return res.send('Hello World.');
+    return res.send('You are not authorized to visit this website.');
 });
 
-router.post('/signup',function(req,res){
-    let user = new User({
-        username: req.body.username,
-    });
-    User.findOne({username: req.body.username}, function(err, foundUser){
+router.post('/signup', function(req,res){
+    User.findOne({username: req.body.username},function(err,foundUser){
         if(err){
             return res.json({
                 message: err.message,
@@ -20,22 +17,26 @@ router.post('/signup',function(req,res){
             })
         } else {
             if(!foundUser){
-                User.register(user,req.body.password,function(err,user){
-                    if(!err){
-                        passport.authenticate('local')(req, res,function(){
+                bcrypt.hash(req.body.password,saltRounds,function(err,hash){
+                    const newUser = new User({
+                        username: req.body.username,
+                        password: hash,
+                    })
+                    newUser.save(function(err){
+                        if(!err){
                             return res.json({
                                 message:'User has been registered.',
-                                userId: user._id,
+                                userId: newUser._id,
                                 isSuccess: true
                             })
-                        });
-                    } else{
-                        return res.json({
-                            message: err.message,
-                            isSuccess: false
-                        })
-                    }
-                });
+                        } else{
+                            return res.json({
+                                message: err.message,
+                                isSuccess: false
+                            })
+                        }
+                    })
+                })
             } else{
                 return res.json({
                     message: 'Username already exists.',
@@ -43,40 +44,41 @@ router.post('/signup',function(req,res){
                 })
             }
         }
-    });
-    
+    })
 })
 
-router.post('/login', function(req,res,next){
-    passport.authenticate("local", function (err, user, info) {
-        if (err) {
+router.post('/login',function(req,res){
+    User.findOne({username: req.body.username},function(err,foundUser){
+        if(err){
             return res.json({
                 message: err.message,
                 isSuccess: false
-            })
+            });
+        } else{
+            if(!foundUser){
+                return res.json({
+                    message: 'Invalid Username/Password.',
+                    isSuccess: false
+                });
+            } else {
+                bcrypt.compare(req.body.password, foundUser.password, function(err, result) {
+                    if(result){
+                        return res.json({
+                            message: 'User found',
+                            userId: foundUser._id,
+                            isSuccess: true
+                        })
+                    } else {
+                        return res.json({
+                            message: 'Invalid Username/Password.',
+                            isSuccess: false
+                        })
+                    }
+                });
+            }
         }
-        if (!user) {
-            return res.json({
-                message: 'Invalid Username/Password.',
-                isSuccess: false
-            })
-        }
-        req.logIn(user, function (err) {
-          if (err) {
-              return res.json({
-                message: err.message,
-                isSuccess: false
-              })
-          } else{
-            return res.json({
-                message: 'User found',
-                userId: user._id,
-                isSuccess: true
-            })
-          }
-        });
-    })(req, res, next);
-});
+    })
+})
 
 router.get('/:id',function(req,res){
     User.findOne({_id: req.params.id}, function(err,foundUser){
