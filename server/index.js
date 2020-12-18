@@ -18,7 +18,7 @@ mongoose.set("useUnifiedTopology", true);
 mongoose.connect("mongodb://localhost/flude");
 
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: 'flude is my secret.',
     resave: false,
     saveUninitialized: false
     })
