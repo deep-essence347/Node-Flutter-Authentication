@@ -65,8 +65,9 @@ class _SignupFormState extends State<SignupForm> {
                     if(res['isSuccess']){
                       await SharedPrefs.setAuthState(res['userId']);
                       Navigator.pushNamed(context, HomePage.id);
+                      FlashMessage.successFlash(res['message']);
                     } else {
-                      // FlashMessage.errorFlash(res['message']);
+                      FlashMessage.errorFlash(res['message']);
                     }
                   });
                 },

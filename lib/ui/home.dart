@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../services/auth.dart';
 import '../services/shared_prefs.dart';
 import '../ui/login.dart';
+import '../services/message.dart';
 
 class HomePage extends StatefulWidget {
   static const id = 'homePage';
@@ -47,6 +48,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () async{
                   await AuthService.logout().whenComplete((){
                     Navigator.pushNamed(context, LoginForm.id);
+                    FlashMessage.successFlash('You have been logged out successfully');
                   });
                 },
               )
