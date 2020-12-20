@@ -12,8 +12,11 @@ class HttpServer{
         data: data,
         options: Options(contentType: Headers.formUrlEncodedContentType)
       ).then((value) => value.data);
-    } catch(e){
-      print('Error: '+e.toString());
+    } catch(err){
+      return {
+        'message': err.message,
+        'isSuccess': false
+      };
     }
   }
 
@@ -22,8 +25,11 @@ class HttpServer{
       return await dio.get(
         '$_domain$route',
       ).then((value) => value.data);
-    } catch(e){
-      print('Error: '+e.toString());
+    } catch(err){
+      return {
+        'message': err.message,
+        'isSuccess': false
+      };
     }
   }
 }

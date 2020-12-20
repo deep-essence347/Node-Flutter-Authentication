@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  getUserData() async{
+  getUserData() async {
     var user = await SharedPrefs.readAuthState();
     return await AuthService.getCurrentUser(user['userId']);
   }
@@ -37,24 +37,42 @@ class _HomePageState extends State<HomePage> {
         middle: Text('HomePage'),
       ),
       child: Center(
-        child: currentUser != null 
-          ? Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Welcome ${currentUser['username']}'),
-              FlatButton(
-                child: Text('Logout'),
-                color: Colors.grey,
-                onPressed: () async{
-                  await AuthService.logout().whenComplete((){
-                    Navigator.pushNamed(context, LoginForm.id);
-                    FlashMessage.successFlash('You have been logged out successfully');
-                  });
-                },
+        child: currentUser != null
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Color(0xffffffff),
+                          width: 3,
+                          style: BorderStyle.solid),
+                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                    ),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.grey.shade300,
+                      backgroundImage: NetworkImage(currentUser['profile']),
+                      radius: 50,
+                    ),
+                  ),
+                  Text('Welcome ${currentUser['username']}'),
+                  FlatButton(
+                    child: Text('Logout'),
+                    color: Colors.grey,
+                    onPressed: () async {
+                      await AuthService.logout().whenComplete(() {
+                        Navigator.pushNamed(context, LoginForm.id);
+                        FlashMessage.successFlash(
+                            'You have been logged out successfully');
+                      });
+                    },
+                  ),
+                ],
               )
-            ]
-          ) : CircularProgressIndicator(backgroundColor: Colors.grey,)
-      )
+            : CircularProgressIndicator(
+                backgroundColor: Colors.grey,
+              ),
+      ),
     );
   }
 }

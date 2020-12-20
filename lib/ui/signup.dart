@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 import '../services/message.dart';
 import '../services/shared_prefs.dart';
 import '../services/auth.dart';
@@ -16,7 +19,21 @@ class SignupForm extends StatefulWidget {
 class _SignupFormState extends State<SignupForm> {
   final TextEditingController _username=TextEditingController();
   final TextEditingController _password=TextEditingController();
+  File _pickedImage;
   
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+
+    final imageFile = await picker.getImage(
+      source: ImageSource.gallery,
+      imageQuality: 100,
+    );
+    final File pickedImageFile = File(imageFile.path);
+    setState(() {
+      _pickedImage = pickedImageFile;
+    });
+  }
+
   @override
   void dispose() {
     _username.dispose();
@@ -35,6 +52,24 @@ class _SignupFormState extends State<SignupForm> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            Column(
+              children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Colors.grey.shade300,
+                  backgroundImage: _pickedImage != null ? FileImage(_pickedImage) : null,
+                ),
+                FlatButton.icon(
+                  textColor: Colors.blue.shade300,
+                  onPressed: _pickImage,
+                  icon: Icon(_pickedImage == null
+                      ? Icons.add_photo_alternate
+                      : Icons.image),
+                  label:
+                      Text(_pickedImage == null ? 'Add Image' : 'Change Image'),
+                ),
+              ],
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: CupertinoTextField(
@@ -61,7 +96,7 @@ class _SignupFormState extends State<SignupForm> {
                 color: Colors.blue,
                 textColor: Colors.white,
                 onPressed: ()async{
-                  await AuthService.signup(_username.text, _password.text).then((res)async{
+                  await AuthService.signup(_username.text, _password.text, image: _pickedImage).then((res)async{
                     if(res['isSuccess']){
                       await SharedPrefs.setAuthState(res['userId']);
                       Navigator.pushNamed(context, HomePage.id);
