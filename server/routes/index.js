@@ -110,28 +110,4 @@ router.post("/login", function (req, res) {
   });
 });
 
-router.get("/:id", function (req, res) {
-  User.findOne({ _id: req.params.id }, function (err, foundUser) {
-    if (!err) {
-      if (foundUser) {
-        return res.json({
-          user: foundUser,
-          message: "Found current User",
-          isSuccess: true,
-        });
-      } else {
-        return res.json({
-          message: "Current User not found",
-          isSuccess: false,
-        });
-      }
-    } else {
-      return res.json({
-        message: "Error getting data",
-        isSuccess: false,
-      });
-    }
-  });
-});
-
 module.exports = router;

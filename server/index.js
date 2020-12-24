@@ -7,9 +7,10 @@ const cloudinary = require('cloudinary').v2;
 const User = require('./model/user');
 
 const app = express();
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: true}),bodyParser.json({extended: true}));
 
 var indexRoutes = require('./routes/index');
+var userRoutes = require('./routes/user');
 
 cloudinary.config({ 
     cloud_name: 'deepessence', 
@@ -22,6 +23,7 @@ mongoose.set("useUnifiedTopology", true);
 mongoose.connect("mongodb://localhost/flude");
 
 app.use("/",indexRoutes);
+app.use('/user',userRoutes);
 
 app.listen(3000, function(){
     console.log('Server started.');

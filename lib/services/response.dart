@@ -20,10 +20,11 @@ class HttpServer{
     }
   }
 
-  get(route) async {
+  get(route,{data}) async {
     try{
       return await dio.get(
         '$_domain$route',
+        queryParameters: data
       ).then((value) => value.data);
     } catch(err){
       return {

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:node_flutter/ui/data.dart';
+import 'package:node_flutter/ui/form.dart';
 import './services/shared_prefs.dart';
 import './ui/home.dart';
 import './ui/login.dart';
@@ -35,6 +37,8 @@ class MyApp extends StatelessWidget {
         LoginForm.id: (context) => LoginForm(),
         SignupForm.id: (context) => SignupForm(),
         HomePage.id: (context) => HomePage(),
+        ItemForm.id: (context) => ItemForm(),
+        Datalist.id: (context) => Datalist(),
       },
     );
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:node_flutter/ui/data.dart';
+import 'package:node_flutter/ui/form.dart';
 import '../services/auth.dart';
 import '../services/shared_prefs.dart';
 import '../ui/login.dart';
@@ -56,6 +58,26 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Text('Welcome ${currentUser['username']}'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FlatButton(
+                        child: Text('Form'),
+                        onPressed: (){
+                          Navigator.pushNamed(context, ItemForm.id);
+                        },
+                        color: Colors.blueAccent,
+                      ),
+                      SizedBox(width: 20),
+                      FlatButton(
+                        onPressed: (){
+                          Navigator.pushNamed(context, Datalist.id);
+                        },
+                        child: Text('Data'),
+                        color: Colors.greenAccent,
+                      ),
+                    ],
+                  ),
                   FlatButton(
                     child: Text('Logout'),
                     color: Colors.grey,

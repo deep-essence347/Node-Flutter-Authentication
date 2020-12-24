@@ -28,7 +28,8 @@ class AuthService {
 
   static getCurrentUser(String id) async{
     return HttpServer().get(
-      '/$id'
+      '/user',
+      data: {'userId': id}
     );
   }
 
