@@ -17,6 +17,7 @@ router.get("/", function (req, res) {
   return res.send("You are not authorized to visit this website.");
 });
 
+// Stores registered data to mongodb
 router.post("/signup", upload.single("image"), function (req, res) {
   User.findOne({ username: req.body.username }, function (err, foundUser) {
     if (err) {
@@ -26,7 +27,7 @@ router.post("/signup", upload.single("image"), function (req, res) {
       });
     } else {
       if (!foundUser) {
-        bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
+        bcrypt.hash(req.body.password, saltRounds, function (err, hash) { //Hashes the password
             if(err){
                 return res.json({
                     message: err.message,
@@ -36,7 +37,7 @@ router.post("/signup", upload.single("image"), function (req, res) {
                 const newUser = new User();
                 newUser.username = req.body.username;
                 newUser.password = hash;
-                cloudinary.uploader.upload(req.file.path, {folder: 'profile/',public_id: newUser._id},function (err, result) {
+                cloudinary.uploader.upload(req.file.path, {folder: 'profile/',public_id: newUser._id},function (err, result) { //Uploads the image
                     if (err) {
                     res.json({
                         message: err.message,
@@ -73,6 +74,7 @@ router.post("/signup", upload.single("image"), function (req, res) {
   });
 });
 
+//Retrieves the data inputted by user and checks if the user's credentials are valid.
 router.post("/login", function (req, res) {
   User.findOne({ username: req.body.username }, function (err, foundUser) {
     if (err) {
@@ -90,7 +92,7 @@ router.post("/login", function (req, res) {
         bcrypt.compare(
           req.body.password,
           foundUser.password,
-          function (err, result) {
+          function (err, result) { //Compares current password's hash and foundUser's password hash
             if (result) {
               return res.json({
                 message: "User found",

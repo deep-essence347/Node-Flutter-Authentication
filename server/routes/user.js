@@ -1,10 +1,11 @@
-const e = require("express");
 const express = require("express");
+const item = require("../model/item");
 const router = express.Router();
 
 const Item = require('../model/item');
 const User = require('../model/user');
 
+// Returns Current User Data
 router.get("/", function (req, res) {
     User.findOne({ _id: req.query.userId }, function (err, foundUser) {
       if (!err) {
@@ -29,6 +30,7 @@ router.get("/", function (req, res) {
     });
 });
 
+// Adds an Item to MongoDB database
 router.post('/:id/addItem', function(req,res){
     User.findOne({_id: req.params.id}, function(err,foundUser){
         if(err){
@@ -59,7 +61,6 @@ router.post('/:id/addItem', function(req,res){
                         foundUser.save(function(err){
                             return res.json({
                                 message: 'Item added.',
-                                item: newItem,
                                 isSuccess: true
                             });
                         });
@@ -70,6 +71,7 @@ router.post('/:id/addItem', function(req,res){
     });
 });
 
+// returns all items present in the database
 router.get('/allData', function(req,res){
     Item.find({}, function(err,items){
         if(err){
@@ -93,7 +95,7 @@ router.get('/allData', function(req,res){
     })
 });
 
-
+// returns an item from MongoDB database
 router.get('/data/:id', function(req,res){
     Item.find({_id: req.params.id}, function(err,item){
         if(err){
@@ -117,6 +119,7 @@ router.get('/data/:id', function(req,res){
     })
 });
 
+// Returns the items with item.name containing the queried value
 router.get('/search',function(req,res){
     Item.find({name: new RegExp(req.query.query)},function(err, items){
         if(err){
@@ -125,7 +128,7 @@ router.get('/search',function(req,res){
                 isSuccess: false
             });
         } else {
-            if(items.length === 0){
+          if(items.length === 0){
                 return res.json({
                     message: 'No value present.',
                     isSuccess: true

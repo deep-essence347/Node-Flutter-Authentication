@@ -42,8 +42,8 @@ class _DatalistState extends State<Datalist> {
 
   _search() async {
     _searchedItems = [];
-    if (_searchText.text != null || _searchText.text != '')
-      await ItemService.searchItems(_searchText.text).then((res) {
+    if (_searchText.text != null || _searchText.text.trim() != '')
+      await ItemService.searchItems(_searchText.text.trim()).then((res) {
         if (res['message'] != null) {
           FlashMessage.errorFlash(res['message']);
         } else {

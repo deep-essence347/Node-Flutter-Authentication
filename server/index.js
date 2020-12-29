@@ -25,6 +25,13 @@ mongoose.connect("mongodb://localhost/flude");
 app.use("/",indexRoutes);
 app.use('/user',userRoutes);
 
+app.request('*',function(req,res){
+    return res.json({
+        message: 'Invalid Route.',
+        isSuccess: false
+    });
+});
+
 app.listen(3000, function(){
     console.log('Server started.');
 });
