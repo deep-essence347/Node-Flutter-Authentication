@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:node_flutter/ui/itemList.dart';
-import '../services/item.dart';
-import '../services/message.dart';
-import '../model/item.dart';
+
+import '../../model/item.dart';
+import '../../services/item.dart';
+import '../../services/message.dart';
+import 'itemList.dart';
 
 class Datalist extends StatefulWidget {
   static const id = 'datalist';
@@ -99,11 +100,11 @@ class _DatalistState extends State<Datalist> {
             ],
           ),
           FlatButton(
-            onPressed: (){
+            onPressed: () {
               setState(() {
                 _searchedItems.clear();
-                hasFiltered = false; 
-                _searchText.text = ''; 
+                hasFiltered = false;
+                _searchText.text = '';
               });
             },
             color: Colors.red,

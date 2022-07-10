@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:node_flutter/ui/data.dart';
-import 'package:node_flutter/ui/form.dart';
-import './services/shared_prefs.dart';
-import './ui/home.dart';
-import './ui/login.dart';
-import './ui/signup.dart';
+import 'package:node_flutter/first.dart';
+import 'package:node_flutter/ui/jwt/home.dart';
+
+import 'ui/jwt/login.dart';
+import 'ui/jwt/signup.dart';
+import 'ui/other/data.dart';
+import 'ui/other/form.dart';
+import 'ui/sharedPrefs/home.dart';
+import 'ui/sharedPrefs/login.dart';
+import 'ui/sharedPrefs/signup.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {  
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,26 +23,16 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: FutureBuilder(
-        future: SharedPrefs.checkAuth(),
-        builder: (context, snap){
-          if(!snap.hasData){
-            return CircularProgressIndicator();
-          } else {
-            if(!snap.data){
-              return LoginForm();
-            } else {
-              return HomePage();
-            }
-          }
-        },
-      ),
+      home: FirstPage(),
       routes: {
-        LoginForm.id: (context) => LoginForm(),
-        SignupForm.id: (context) => SignupForm(),
-        HomePage.id: (context) => HomePage(),
-        ItemForm.id: (context) => ItemForm(),
-        Datalist.id: (context) => Datalist(),
+        LoginForm.id: (_) => LoginForm(),
+        SignupForm.id: (_) => SignupForm(),
+        HomePage.id: (_) => HomePage(),
+        JwtLogin.id: (_) => JwtLogin(),
+        JwtSignUp.id: (_) => JwtSignUp(),
+        JwtHomePage.id: (_) => JwtHomePage(),
+        ItemForm.id: (_) => ItemForm(),
+        Datalist.id: (_) => Datalist(),
       },
     );
   }

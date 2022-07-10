@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import '../services/message.dart';
-import '../services/shared_prefs.dart';
-import '../ui/home.dart';
-import '../services/auth.dart';
+import 'package:flutter/material.dart';
+
+import '../../services/sp/auth.dart';
+import '../../services/message.dart';
+import '../../services/sp/shared_prefs.dart';
 import './signup.dart';
+import 'home.dart';
 
 class LoginForm extends StatefulWidget {
   static const id = 'LoginForm';
@@ -13,16 +14,16 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  final TextEditingController _username=TextEditingController();
-  final TextEditingController _password=TextEditingController();
-  
+  final TextEditingController _username = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+
   @override
   void dispose() {
     _username.dispose();
     _password.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -59,9 +60,10 @@ class _LoginFormState extends State<LoginForm> {
                 child: Text('Login'),
                 color: Colors.blue,
                 textColor: Colors.white,
-                onPressed: () async{
-                  await AuthService.login(_username.text, _password.text).then((res) async{
-                    if(res['isSuccess']){
+                onPressed: () async {
+                  await AuthService.login(_username.text, _password.text)
+                      .then((res) async {
+                    if (res['isSuccess']) {
                       await SharedPrefs.setAuthState(res['userId']);
                       Navigator.pushNamed(context, HomePage.id);
                       FlashMessage.successFlash(res['message']);
@@ -73,28 +75,23 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
             Center(
-              child: Column(
-                children: [
-                  Text(
-                    'Don\'t have an account?',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 12,
-                      decoration: TextDecoration.underline,
-                      decorationColor: Colors.blue,
-                      decorationStyle: TextDecorationStyle.solid
-                    ),
-                  ),
-                  FlatButton(
-                    child: Text('Sign Up'),
-                    color: Colors.grey.shade300,
-                    onPressed: (){
-                      Navigator.pushNamed(context, SignupForm.id);
-                    }
-                  )
-                ]
-              )
-            )
+                child: Column(children: [
+              Text(
+                'Don\'t have an account?',
+                style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 12,
+                    decoration: TextDecoration.underline,
+                    decorationColor: Colors.blue,
+                    decorationStyle: TextDecorationStyle.solid),
+              ),
+              FlatButton(
+                  child: Text('Sign Up'),
+                  color: Colors.grey.shade300,
+                  onPressed: () {
+                    Navigator.pushNamed(context, SignupForm.id);
+                  })
+            ]))
           ],
         ),
       ),

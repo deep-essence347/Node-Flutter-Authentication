@@ -1,34 +1,37 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:node_flutter/ui/data.dart';
-import 'package:node_flutter/ui/form.dart';
-import '../services/auth.dart';
-import '../services/shared_prefs.dart';
-import '../ui/login.dart';
-import '../services/message.dart';
+import 'package:node_flutter/services/jwt/auth.dart';
+import 'package:node_flutter/ui/sharedPrefs/login.dart';
 
-class HomePage extends StatefulWidget {
-  static const id = 'homePage';
+import '../../services/message.dart';
+import '../other/data.dart';
+import '../other/form.dart';
+
+class JwtHomePage extends StatefulWidget {
+  static const id = 'jwtHomePage';
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _JwtHomePageState createState() => _JwtHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _JwtHomePageState extends State<JwtHomePage> {
   var currentUser;
+
   @override
   void initState() {
-    super.initState();
-    getUserData().then((value) {
-      setState(() {
-        currentUser = value['user'];
-      });
+    getUserInfo().then((res) {
+      if (res['isSuccess'])
+        setState(() {
+          currentUser = res['user'];
+        });
+      else
+        FlashMessage.errorFlash(res['message']);
     });
+    super.initState();
   }
 
-  getUserData() async {
-    var user = await SharedPrefs.readAuthState();
-    return await AuthService.getCurrentUser(user['userId']);
+  getUserInfo() async {
+    return await JwtAuth.jwtGetCurrentUser();
   }
 
   @override
@@ -63,14 +66,14 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       FlatButton(
                         child: Text('Form'),
-                        onPressed: (){
+                        onPressed: () {
                           Navigator.pushNamed(context, ItemForm.id);
                         },
                         color: Colors.blueAccent,
                       ),
                       SizedBox(width: 20),
                       FlatButton(
-                        onPressed: (){
+                        onPressed: () {
                           Navigator.pushNamed(context, Datalist.id);
                         },
                         child: Text('Data'),
@@ -82,10 +85,13 @@ class _HomePageState extends State<HomePage> {
                     child: Text('Logout'),
                     color: Colors.grey,
                     onPressed: () async {
-                      await AuthService.logout().whenComplete(() {
+                      // await AuthService.logout().whenComplete(() {
+                      //   Navigator.pushNamed(context, LoginForm.id);
+                      //   FlashMessage.successFlash(
+                      //       'You have been logged out successfully');
+                      // });
+                      await JwtAuth.jwtLogout().then(() {
                         Navigator.pushNamed(context, LoginForm.id);
-                        FlashMessage.successFlash(
-                            'You have been logged out successfully');
                       });
                     },
                   ),

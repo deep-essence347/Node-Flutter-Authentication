@@ -1,14 +1,14 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../services/message.dart';
-import '../services/shared_prefs.dart';
-import '../services/auth.dart';
-import './login.dart';
-import './home.dart';
 
+import '../../services/sp/auth.dart';
+import '../../services/message.dart';
+import '../../services/sp/shared_prefs.dart';
+import './home.dart';
+import './login.dart';
 
 class SignupForm extends StatefulWidget {
   static const id = 'signupForm';
@@ -17,10 +17,10 @@ class SignupForm extends StatefulWidget {
 }
 
 class _SignupFormState extends State<SignupForm> {
-  final TextEditingController _username=TextEditingController();
-  final TextEditingController _password=TextEditingController();
+  final TextEditingController _username = TextEditingController();
+  final TextEditingController _password = TextEditingController();
   File _pickedImage;
-  
+
   Future<void> _pickImage() async {
     final picker = ImagePicker();
 
@@ -40,7 +40,7 @@ class _SignupFormState extends State<SignupForm> {
     _password.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -57,7 +57,8 @@ class _SignupFormState extends State<SignupForm> {
                 CircleAvatar(
                   radius: 50,
                   backgroundColor: Colors.grey.shade300,
-                  backgroundImage: _pickedImage != null ? FileImage(_pickedImage) : null,
+                  backgroundImage:
+                      _pickedImage != null ? FileImage(_pickedImage) : null,
                 ),
                 FlatButton.icon(
                   textColor: Colors.blue.shade300,
@@ -95,9 +96,11 @@ class _SignupFormState extends State<SignupForm> {
                 child: Text('Sign Up'),
                 color: Colors.blue,
                 textColor: Colors.white,
-                onPressed: ()async{
-                  await AuthService.signup(_username.text, _password.text, image: _pickedImage).then((res)async{
-                    if(res['isSuccess']){
+                onPressed: () async {
+                  await AuthService.signup(_username.text, _password.text,
+                          image: _pickedImage)
+                      .then((res) async {
+                    if (res['isSuccess']) {
                       await SharedPrefs.setAuthState(res['userId']);
                       Navigator.pushNamed(context, HomePage.id);
                       FlashMessage.successFlash(res['message']);
@@ -109,28 +112,23 @@ class _SignupFormState extends State<SignupForm> {
               ),
             ),
             Center(
-              child: Column(
-                children: [
-                  Text(
-                    'Already have an account?',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 12,
-                      decoration: TextDecoration.underline,
-                      decorationColor: Colors.blue,
-                      decorationStyle: TextDecorationStyle.solid
-                    ),
-                  ),
-                  FlatButton(
-                    child: Text('Login'),
-                    color: Colors.grey.shade300,
-                    onPressed: (){
-                      Navigator.pushNamed(context, LoginForm.id);
-                    }
-                  )
-                ]
-              )
-            )
+                child: Column(children: [
+              Text(
+                'Already have an account?',
+                style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 12,
+                    decoration: TextDecoration.underline,
+                    decorationColor: Colors.blue,
+                    decorationStyle: TextDecorationStyle.solid),
+              ),
+              FlatButton(
+                  child: Text('Login'),
+                  color: Colors.grey.shade300,
+                  onPressed: () {
+                    Navigator.pushNamed(context, LoginForm.id);
+                  })
+            ]))
           ],
         ),
       ),

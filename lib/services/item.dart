@@ -1,4 +1,4 @@
-import 'package:node_flutter/services/response.dart';
+import 'sp/response.dart';
 
 class ItemService {
   static addItem(String name, int price, String userId) {
@@ -12,11 +12,11 @@ class ItemService {
     );
   }
 
-  static getItems(){
+  static getItems() {
     return HttpServer().get('/user/allData');
   }
 
-  static searchItems(String queryText){
-    return HttpServer().get('/user/search',data: {'query': queryText});
+  static searchItems(String queryText) {
+    return HttpServer().get('/user/search', data: {'query': queryText});
   }
 }

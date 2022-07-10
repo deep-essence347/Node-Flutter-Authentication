@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:node_flutter/model/item.dart';
+
+import '../../model/item.dart';
 
 class ItemList extends StatelessWidget {
-  ItemList(this.items,this.length);
+  ItemList(this.items, this.length);
   final List<ItemModel> items;
   final int length;
 
